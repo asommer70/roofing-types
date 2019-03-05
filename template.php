@@ -13,10 +13,10 @@
       <article>
         <a href="<?php echo $link; ?>" class="image featured"><img src="<?php echo $image_url; ?>" alt="<?php echo $rooftype->post_title; ?>" /></a>
         <header>
-          <h3><a href="" data-modal="#modal" class="modal__trigger"><?php echo $rooftype->post_title ?></a></h3>
+          <h3><a href="" data-modal="#modal-<?php echo $rooftype->ID; ?>" class="modal__trigger"><?php echo $rooftype->post_title ?></a></h3>
         </header>
 
-        <div id="modal" class="modal modal__bg" role="dialog" aria-hidden="true">
+        <div id="modal-<?php echo $rooftype->ID; ?>" class="modal modal__bg" role="dialog" aria-hidden="true">
           <div class="modal__dialog">
             <div class="modal__content">
               <h2><?php echo $rooftype->post_title; ?></h2>
