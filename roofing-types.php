@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) or die( 'No please!' );
 // Add the new post type.
 //
 function roofingtypes_create_post_type() {
-  register_post_type( 'roofing-types',
+  register_post_type( 'roofingtypes',
     [
       'labels' => ['name' => __( 'Roofing Types' ), 'singular_name' => __( 'Roofing Type')],
       'public' => true,
@@ -25,6 +25,7 @@ function roofingtypes_create_post_type() {
       'hierarchical' => true,
       'supports' => [
         'title',
+        'editor',
         'thumbnail',
         'page-attributes',
       ],
@@ -34,14 +35,30 @@ function roofingtypes_create_post_type() {
 }
 add_action('init', 'roofingtypes_create_post_type');
 
+//
+// Add link to Roofing Types on Plugins page.
+//
+function add_roofingtypes_link($links, $file) {
+  static $this_plugin;
+  if (!$this_plugin) $this_plugin = plugin_basename(__FILE__);
+
+  if ($file == $this_plugin){
+    http://localhost/wp-admin/edit.php?post_type=roofingtypes
+  $settings_link = '<a href="/wp-admin/edit.php?post_type=roofingtypes">Roofing Types</a>';
+  array_unshift($links, $settings_link);
+  }
+  return $links;
+}
+add_filter('plugin_action_links', 'add_roofingtypes_link', 10, 2 );
 
 //
-// Create a meta box in the Admin for image size and link url.
+// Create a meta box in the Admin for link url.
 //
 function roofingtypes_add_custom_box() {
+  global $current_screen;
   add_meta_box(
-      'roofingtypes_image_link',
-      'Roofing Types Settings',
+      'rft_link',
+      'Roofing Type Settings',
       'roofingtypes_meta_box_html',
       ['roofingtypes']
   );
@@ -51,8 +68,8 @@ add_action('add_meta_boxes', 'roofingtypes_add_custom_box');
 // HTML for the meta box.
 function roofingtypes_meta_box_html($post) {
   $link = get_post_meta($post->ID, 'roofingtypes_link', true);
-
   ?>
+
   <label for="roofingtypes-link-url">Link URL</label>
   <br/>
   <input id="roofingtypes-link-url" name="roofingtypes-link-url" type="text" class="roofingtypes-input" placeholder="http://..." value="<?php echo $link; ?>" />
@@ -73,7 +90,7 @@ add_action('save_post', 'roofingtypes_save_postdata');
 function roofingtypes_columns_head($defaults) {
   $defaults['roofingtypes_order'] = 'Order';
   $defaults['featured_image'] = 'Featured Image';
-  $defaults['experience_link'] = 'Link';
+  $defaults['roofingtypes_link'] = 'Link';
   return $defaults;
 }
 
